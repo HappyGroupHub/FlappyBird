@@ -1,0 +1,25 @@
+Decide the fps.
+What is surfaces?
+
+Display Surfaces:
+  There can only be on.
+  Will always be shown.
+  #Backround surface?
+(regular) Surface:
+  There can be as many as you need.
+  Is only displayed when attached to the display surface.
+  #Objects Images?
+
+Images file getting input.
+the (x,y) postion is from top left.
+Images (x,y) system be like:
+
+      increase x (right to increase)             (0,0)         (576,0)
+    |- - - - - - - >                                | - - - - - - |
+    |                                               |             |
+    |                                               |             |
+    |                                               |             |
+    |                                               |             |
+    ˇ decrease y (down to decrease)                 | - - - - - - |
+                                                (0,800)        (576,800)
+
