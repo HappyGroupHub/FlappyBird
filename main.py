@@ -33,9 +33,11 @@ def create_floor():
 
 
 def create_pipe():
-    random_pipe_ypos = randrange(250, 575)
-    new_pipe = pipe_surface.get_rect(midtop=(600, random_pipe_ypos))
-    return new_pipe
+    random_pipe_ypos = randrange(300, 575)
+    bottom_pipe = pipe_surface.get_rect(midtop=(600, random_pipe_ypos))
+    top_pipe = pipe_surface.get_rect(midbottom=(600, random_pipe_ypos - 300))
+
+    return bottom_pipe, top_pipe
 
 
 def move_pipes(pipes):
@@ -46,7 +48,11 @@ def move_pipes(pipes):
 
 def draw_pipes(pipes):
     for pipe in pipes:
-        screen.blit(pipe_surface, pipe)
+        if pipe.bottom >= 900:
+            screen.blit(pipe_surface, pipe)
+        else:
+            flip_pipe = pygame.transform.flip(pipe_surface, False, True)
+            screen.blit(flip_pipe, pipe)
 
 
 while True:
@@ -61,11 +67,11 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 bird_movement = 0
-                bird_movement -= 12
+                bird_movement -= 10
 
         # Spawn pipes
         if event.type == SPAWNPIPE:
-            pipe_list.append(create_pipe())
+            pipe_list.extend(create_pipe())
 
     # Generate background
     screen.blit(bg_surface, (0, -150))
