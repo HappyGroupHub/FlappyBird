@@ -20,6 +20,7 @@ bird_rect = bird_surface.get_rect(center=(100, 400))
 # Game Variables
 gravity = 0.25
 bird_movement = 0
+game_start = True
 
 # Spawn Pipes
 pipe_list = []
@@ -55,6 +56,16 @@ def draw_pipes(pipes):
             screen.blit(flip_pipe, pipe)
 
 
+def check_collisions(pipes):
+    for pipe in pipes:
+        if bird_rect.colliderect(pipe):
+            return False
+    if bird_rect.top <= -100 or bird_rect.bottom >= 750:
+        return False
+    else:
+        return True
+
+
 while True:
     for event in pygame.event.get():
 
@@ -65,7 +76,13 @@ while True:
 
         # Space button triggered event
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and game_start == True:
+                bird_movement = 0
+                bird_movement -= 10
+            if event.key == pygame.K_SPACE and game_start == False:
+                game_start = True
+                pipe_list.clear()
+                bird_rect.center = (100, 400)
                 bird_movement = 0
                 bird_movement -= 10
 
@@ -76,20 +93,25 @@ while True:
     # Generate background
     screen.blit(bg_surface, (0, -150))
 
-    # Bird's movement
-    bird_movement = bird_movement + gravity
-    bird_rect.centery = bird_rect.centery + bird_movement
-    screen.blit(bird_surface, bird_rect)
-
     # Generating moving floor
     create_floor()
     floor_x -= 1
     if floor_x == -576:
         floor_x = 0
 
-    # Generating moving pipes
-    pipe_list = move_pipes(pipe_list)
-    draw_pipes(pipe_list)
+    if game_start:
+        # Bird's movement
+        bird_movement = bird_movement + gravity
+        bird_rect.centery = bird_rect.centery + bird_movement
+        screen.blit(bird_surface, bird_rect)
+        check_collisions(pipe_list)
+
+        # Generating moving pipes
+        pipe_list = move_pipes(pipe_list)
+        draw_pipes(pipe_list)
+
+        # Check game status
+        game_start = check_collisions(pipe_list)
 
     # Update display
     pygame.display.update()
