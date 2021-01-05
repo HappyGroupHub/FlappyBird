@@ -15,6 +15,8 @@ pipe_surface = pygame.transform.scale2x(pygame.image.load('assets/pipe-green.png
 bird_downflap = pygame.transform.scale2x(pygame.image.load("assets/bluebird-downflap.png").convert_alpha())
 bird_midflap = pygame.transform.scale2x(pygame.image.load("assets/bluebird-midflap.png").convert_alpha())
 bird_upflap = pygame.transform.scale2x(pygame.image.load("assets/bluebird-upflap.png").convert_alpha())
+game_over_surface = pygame.transform.scale2x(pygame.image.load('assets/gameover.png').convert_alpha())
+get_ready_surface = pygame.transform.scale2x(pygame.image.load('assets/message.png').convert_alpha())
 
 # Bird's Animation
 bird_frames = [bird_downflap, bird_midflap, bird_upflap]
@@ -25,10 +27,8 @@ bird_rect = bird_surface.get_rect(center=(100, 400))
 BIRDFLAP = pygame.USEREVENT + 1
 pygame.time.set_timer(BIRDFLAP, 200)
 
-# Objects' Locations and Variables
-floor_x = 0
-
 # Game Variables
+floor_x = 0
 gravity = 0.25
 bird_movement = 0
 game_start = True
@@ -39,6 +39,10 @@ highest_score = 0
 pipe_list = []
 SPAWNPIPE = pygame.USEREVENT
 pygame.time.set_timer(SPAWNPIPE, 1300)
+
+# Game Over Screen
+game_over_rect = game_over_surface.get_rect(center=(288, 700))
+get_ready_rect = get_ready_surface.get_rect(center=(288, 300))
 
 
 def create_floor():
@@ -93,15 +97,15 @@ def bird_animation():
 def score_display(game_status):
     if game_status == "mid_game":
         score_surface = game_font.render(str(int(score)), True, (255, 255, 255))
-        score_rect = score_surface.get_rect(center=(288, 75))
+        score_rect = score_surface.get_rect(center=(288, 100))
         screen.blit(score_surface, score_rect)
     if game_status == "game_over":
         score_surface = game_font.render(f'Score: {int(score)}', True, (255, 255, 255))
-        score_rect = score_surface.get_rect(center=(288, 135))
+        score_rect = score_surface.get_rect(center=(150, 175))
         screen.blit(score_surface, score_rect)
 
         highest_score_surface = game_font.render(f'Best: {int(highest_score)}', True, (255, 255, 255))
-        highest_score_rect = highest_score_surface.get_rect(center=(288, 75))
+        highest_score_rect = highest_score_surface.get_rect(center=(450, 175))
         screen.blit(highest_score_surface, highest_score_rect)
 
 
@@ -173,6 +177,8 @@ while True:
         score += 0.01
         score_display("mid_game")
     else:
+        screen.blit(game_over_surface, game_over_rect)
+        screen.blit(get_ready_surface, get_ready_rect)
         highest_score = highest_score_update(score, highest_score)
         score_display("game_over")
 
